@@ -5,9 +5,10 @@ import utils from "../utils/utils";
 const ThemeContext = React.createContext(
   utils.getLocalStorage("theme") || "light"
 );
+const UserContext = React.createContext(null);
 
 
 const Context = {
-  ThemeContext,
+  ThemeContext, UserContext
 };
 export default Context;

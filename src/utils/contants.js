@@ -35,10 +35,10 @@ const themes = [
   "nord",
   "sunset",
 ];
-const todosUrl = "http://127.0.0.1:8000/api/todos/" + window.location.search;
+const accountsUrl = "http://127.0.0.1:8000/accounts/register/"
 const constants = {
   themes,
-  todosUrl,
+  accountsUrl,
 };
 
 export default constants;

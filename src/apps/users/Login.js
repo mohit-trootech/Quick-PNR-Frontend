@@ -28,10 +28,10 @@ function Login() {
                                     className="input input-bordered input-primary w-full"
                                 />
                                 <div className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center items-center">
-                                    <a role="button" href="/register/" className="btn btn-active btn-primary btn-block max-w-[200px]">
+                                    <a role="button" href="/register/" className="btn btn-outline btn-primary btn-block max-w-[200px]">
                                         Sign Up
                                     </a>
-                                    <button type="submit" role="button" className="btn btn-outline btn-primary btn-block max-w-[200px]">
+                                    <button type="submit" role="button" className="btn btn-primary btn-block max-w-[200px]">
                                         Sign In
                                     </button>
                                 </div>

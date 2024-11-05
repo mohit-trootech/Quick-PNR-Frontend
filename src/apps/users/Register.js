@@ -1,8 +1,35 @@
+/* eslint-disable jsx-a11y/no-redundant-roles */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /**User Registration Page */
 import signup from "../../static/img/signup.gif"
+import { useContext } from "react";
+import Context from "../../context/Contexts";
+import constants from "../../utils/contants"
+import axios from "axios";
+
+
 function Register() {
     /**User Registration Page */
+    const registerUser = async (data) => {
+        try {
+            const response = await axios.post(constants.accountsUrl, data)
+            console.log(response)
+            console.log(response.data)
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = {
+            first_name: event.target.first_name.value,
+            username: event.target.username.value,
+            email: event.target.email.value,
+            password: event.target.password.value,
+            confirm_password: event.target.confirm_password.value
+        }
+        registerUser(data)
+    }
 
     return (
         <>
@@ -19,7 +46,7 @@ function Register() {
                         <h1 className="text-center text-2xl sm:text-3xl font-semibold">
                             Create Account
                         </h1>
-                        <form className="w-full mt-5 sm:mt-8">
+                        <form method="POST" onSubmit={handleSubmit} role="form" className="w-full mt-5 sm:mt-8">
                             <div className="mx-auto w-full sm:max-w-md md:max-w-lg flex flex-col gap-5">
                                 <input
                                     type="text"
@@ -40,7 +67,7 @@ function Register() {
                                     className="input input-bordered input-primary w-full"
                                 />
                                 <input
-                                    type="text"
+                                    type="Password"
                                     placeholder="Choose Your Password"
                                     name="password"
                                     className="input input-bordered input-primary w-full"
@@ -52,9 +79,9 @@ function Register() {
                                     className="input input-bordered input-primary w-full"
                                 />
                                 <div className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center items-center">
-                                    <a role="button" type="submit" className="btn btn-active btn-primary btn-block max-w-[200px]">
+                                    <button role="button" type="submit" className="btn btn-active btn-primary btn-block max-w-[200px]">
                                         Sign Up
-                                    </a>
+                                    </button>
                                     <a href="/login" role="button" className="btn btn-outline btn-primary btn-block max-w-[200px]">
                                         Sign In
                                     </a>
