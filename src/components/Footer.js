@@ -23,7 +23,7 @@ function Footer() {
             <FaGoogle />
           </a>
           <a
-            href="https://github.com/mohit-trootech/react-state"
+            href="https://github.com/mohit-trootech/"
             className="transition-all hover:scale-110 scale-95 delay-100 duration-300"
             target="_blank"
             rel="noreferrer"

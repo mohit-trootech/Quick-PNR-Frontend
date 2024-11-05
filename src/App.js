@@ -5,20 +5,21 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import Home from "./Home";
 import ThemeProvider from "./providers/ThemeProvider";
-import CalculatorProvider from "./providers/CalculatorProvider";
+import Register from "./apps/users/Register"
+import Login from "./apps/users/Login"
 function App() {
   return (
     <ThemeProvider>
-      <CalculatorProvider>
-        <BrowserRouter>
-          <NavBar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="*" element={<NoPage />} />
-          </Routes>
-          <Footer />
-        </BrowserRouter>
-      </CalculatorProvider>
+      <BrowserRouter>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register/" element={<Register />} />
+          <Route path="/login/" element={<Login />} />
+          <Route path="*" element={<NoPage />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

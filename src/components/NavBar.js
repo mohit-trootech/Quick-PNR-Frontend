@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Options from "./ThemeOptions";
 import { useContext } from "react";
 import Context from "../context/Contexts";
+import NavBarLinks from "./NavBarLinks";
 
 function NavBar() {
   /**NavBar DaisyUI Component */
@@ -28,21 +29,7 @@ function NavBar() {
               tabIndex="0"
               className="menu border menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
-              <li>
-                <a href="/">Home</a>
-              </li>
-              <li>
-                <a href="/counter">Counter</a>
-              </li>
-              <li>
-                <a href="/calculator">Calculator</a>
-              </li>
-              <li>
-                <a href="/todos">Todos</a>
-              </li>
-              <li>
-                <a href="/todo-create">Create</a>
-              </li>
+              <NavBarLinks />
               <li>
                 <a href="/about">About</a>
               </li>
@@ -51,7 +38,7 @@ function NavBar() {
         </div>
         <div className="navbar-center">
           <a className="btn btn-ghost text-xl" href="/">
-            React States
+            Quick PNR
           </a>
         </div>
         <div className="navbar-end">

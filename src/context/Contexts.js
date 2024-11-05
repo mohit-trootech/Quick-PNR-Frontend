@@ -7,7 +7,6 @@ const ThemeContext = React.createContext(
 );
 
 
-
 const Context = {
   ThemeContext,
 };
