@@ -4,6 +4,7 @@
 import React, { useContext, useEffect } from "react";
 import Context from "../../context/Contexts";
 import { BsMailbox, BsMapFill, BsPerson } from "react-icons/bs";
+import { MdVerified } from "react-icons/md";
 import UpdateProfile from "./UpdateProfile";
 import profile from "../../static/img/profile.jpg";
 
@@ -22,11 +23,20 @@ function Profile() {
             className="w-full lg:w-3/5 rounded-lg lg:rounded-lg shadow-2xl border bg-base-100  mx-6 lg:mx-0"
           >
             <div className="p-4 md:p-12 text-center lg:text-left">
-              <div className="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center"></div>
+              <div className="flex items-center justify-between">
+                <h1 className="text-3xl font-bold pt-8 lg:pt-0 capitalize">
+                  {user.first_name
+                    ? user.first_name + " " + user.last_name
+                    : user.username}
+                </h1>
 
-              <h1 className="text-3xl font-bold pt-8 lg:pt-0">
-                {user.first_name + " " + user.last_name && user.username}
-              </h1>
+                {(user.is_verified && (
+                  <div className="badge badge-primary badge-lg rounded-full">
+                    <MdVerified />
+                  </div>
+                )) ||
+                  null}
+              </div>
               <div className="mx-auto lg:mx-0 w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
               <p className="pt-4 flex items-center justify-center lg:justify-start items-center">
                 <span className="h-4 fill-current text-green-700 pr-4">
@@ -63,14 +73,30 @@ function Profile() {
                 </button>
               </div>
 
-              <div className="pt-12 pb-8">
+              <div className="pt-12 pb-8 flex sm:flex-col md:flex-row gap-5 justify-center items-center">
                 <button
-                  className="btn-secondary btn"
+                  className="btn-primary btn"
                   onClick={() =>
                     document.getElementById("update_profile").showModal()
                   }
                 >
                   Update Profile
+                </button>
+                <button
+                  className="btn-secondary btn"
+                  onClick={() =>
+                    document.getElementById("update_email").showModal()
+                  }
+                >
+                  Update Email Address
+                </button>
+                <button
+                  className="btn-warning btn"
+                  onClick={() =>
+                    document.getElementById("verify_email").showModal()
+                  }
+                >
+                  Verify Email
                 </button>
               </div>
             </div>

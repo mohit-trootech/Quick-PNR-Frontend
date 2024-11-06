@@ -30,8 +30,8 @@ function Login() {
               <div className="mx-auto w-full sm:max-w-md md:max-w-lg flex flex-col gap-5">
                 <input
                   type="text"
-                  placeholder="Enter Your Email"
-                  name="email"
+                  placeholder="Enter Your Username"
+                  name="username"
                   className="input input-bordered input-primary w-full"
                 />
                 <input

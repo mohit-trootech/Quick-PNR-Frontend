@@ -37,13 +37,12 @@ const UsersProvider = ({ children }) => {
         headers: headers,
       });
       if (callBack) {
-        callBack();
+        callBack(response.data);
       }
       return response.data;
     } catch (error) {
       console.error(error);
       toast.error(error.response.data);
-      console.log(error.response && error.response.status === 401);
       if (error.response && error.response.status === 401) {
         logOut();
       } else {
@@ -57,19 +56,31 @@ const UsersProvider = ({ children }) => {
   };
 
   const registerUser = async (data) => {
-    await axiosRequest(constants.accountsUrl + "register/", "POST", data);
+    await axiosRequest(
+      constants.accountsUrl + "register/",
+      "POST",
+      data,
+      null,
+      userRegister
+    );
+  };
+  const loginUser = async (data) => {
+    await axiosRequest(
+      constants.accountsUrl + "login/",
+      "POST",
+      data,
+      null,
+      userLogin
+    );
+  };
+  const userRegister = (response) => {
     toast.success("User Registered Successfully", {
       onClose: () => {
         window.location.href = "/login/"; //Toast on close redirects to login page
       },
     });
   };
-  const loginUser = async (data) => {
-    const response = await axiosRequest(
-      constants.accountsUrl + "login/",
-      "POST",
-      data
-    );
+  const userLogin = (response) => {
     utils.updateLocalStorage("access", response.access);
     utils.updateLocalStorage("refresh", response.refresh);
     toast.success("Login Successfully", {
@@ -78,7 +89,6 @@ const UsersProvider = ({ children }) => {
       },
     });
   };
-
   const logOut = () => {
     utils.removeLocalStorage("access");
     utils.removeLocalStorage("refresh");
@@ -107,6 +117,34 @@ const UsersProvider = ({ children }) => {
     toast.success("Profile Updated Successfully");
   };
 
+  const updateUserEmail = async (data) => {
+    await axiosRequest(
+      constants.accountsUrl + "update-email/",
+      "PATCH",
+      data,
+      "Bearer " + utils.getLocalStorage("access")
+    );
+    toast.success("Email Updated Successfully");
+  };
+  const verifyUserEmail = async (data) => {
+    await axiosRequest(
+      constants.accountsUrl + "verify-email/",
+      "POST",
+      data,
+      "Bearer " + utils.getLocalStorage("access")
+    );
+    toast.success("Email Verified Successfully");
+  };
+  const generateOtp = async () => {
+    await axiosRequest(
+      constants.accountsUrl + "verify-email/",
+      "GET",
+      null,
+      "Bearer " + utils.getLocalStorage("access")
+    );
+    toast.success("OTP Generated Successfully");
+  };
+
   const data = {
     registerUser,
     loginUser,
@@ -117,6 +155,9 @@ const UsersProvider = ({ children }) => {
     setUser,
     fetchUserProfile,
     updateUserProfile,
+    updateUserEmail,
+    verifyUserEmail,
+    generateOtp,
   };
 
   return (
