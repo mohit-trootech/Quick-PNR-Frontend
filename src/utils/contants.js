@@ -35,7 +35,7 @@ const themes = [
   "nord",
   "sunset",
 ];
-const accountsUrl = "http://127.0.0.1:8000/accounts/register/"
+const accountsUrl = "http://127.0.0.1:8000/accounts/";
 const constants = {
   themes,
   accountsUrl,

@@ -1,24 +1,37 @@
+/* eslint-disable jsx-a11y/no-redundant-roles */
 /**Nav Bar Links */
 import utils from "../utils/utils";
-
+import Context from "../context/Contexts";
+import { useContext } from "react";
 function NavBarLinks() {
-    /**Nav Bar Links Based on User Authentication */
-    const user = utils.getLocalStorage("user");
-    if (user) {
-        return (
-            <>
-                <li><a href="/profile">Profile</a></li>
-                <li><a href="/logout">Logout</a></li>
-            </>
-        );
-    } else {
-        return (
-            <>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/register">Register</a></li>
-            </>
-        );
-    }
+  /**Nav Bar Links Based on User Authentication */
+  const { logOut } = useContext(Context.UserContext);
+  const accessToekn = utils.getLocalStorage("access");
+  if (accessToekn) {
+    return (
+      <>
+        <li>
+          <a href="/profile">Profile</a>
+        </li>
+        <li>
+          <button role="button" onClick={logOut}>
+            Logout
+          </button>
+        </li>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <li>
+          <a href="/login">Login</a>
+        </li>
+        <li>
+          <a href="/register">Register</a>
+        </li>
+      </>
+    );
+  }
 }
 
 export default NavBarLinks;

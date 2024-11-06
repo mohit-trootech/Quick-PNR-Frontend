@@ -2,17 +2,22 @@
 
 const updateLocalStorage = (key, value) => {
   /**Update Browser's LocalStorage Value */
-  window.localStorage.setItem(key, value);
+  localStorage.setItem(key, value);
 };
 
 const getLocalStorage = (key) => {
   /**Get Browser's Local Storage Item */
-  return window.localStorage.getItem(key);
+  return localStorage.getItem(key);
 };
 
+const removeLocalStorage = (key) => [
+  /**Remove Browser's Local Storage Item */
+  localStorage.removeItem(key),
+];
 
 const utils = {
   updateLocalStorage,
   getLocalStorage,
+  removeLocalStorage,
 };
 export default utils;
