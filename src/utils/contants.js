@@ -36,9 +36,12 @@ const themes = [
   "sunset",
 ];
 const accountsUrl = "http://127.0.0.1:8000/accounts/";
+const pnrFetchUrl = "http://127.0.0.1:8000/pnr/fetch/";
+
 const constants = {
   themes,
   accountsUrl,
+  pnrFetchUrl,
 };
 
 export default constants;
