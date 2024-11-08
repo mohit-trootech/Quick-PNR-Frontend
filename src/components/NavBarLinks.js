@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/no-redundant-roles */
 /**Nav Bar Links */
-import utils from "../utils/utils";
+import { getLocalStorage } from "../utils/utils";
 import Context from "../context/Contexts";
 import { useContext } from "react";
 function NavBarLinks() {
   /**Nav Bar Links Based on User Authentication */
   const { logOut } = useContext(Context.UserContext);
-  const accessToekn = utils.getLocalStorage("access");
+  const accessToekn = getLocalStorage("access");
   if (accessToekn) {
     return (
       <>

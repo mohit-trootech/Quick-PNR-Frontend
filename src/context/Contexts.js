@@ -1,10 +1,8 @@
 // ThemeContext.js
 import React from "react";
-import utils from "../utils/utils";
+import { getLocalStorage } from "../utils/utils";
 
-const ThemeContext = React.createContext(
-  utils.getLocalStorage("theme") || "light"
-);
+const ThemeContext = React.createContext(getLocalStorage("theme") || "light");
 const UserContext = React.createContext(null);
 const PnrContext = React.createContext(null);
 

@@ -1,24 +1,21 @@
 // ThemeProvider.js
 import React, { useState, useContext } from "react";
 import Context from "../context/Contexts";
-// import utils from "../utils/utils";
 import { toast } from "react-toastify";
-import constants from "../utils/contants";
-import utils from "../utils/utils";
+import { pnrFetchUrl } from "../utils/contants";
+import { getBearerToken } from "../utils/utils";
 import axios from "axios";
+import {
+  ExceptionHandling,
+  LoadingToast,
+  ErrorToast,
+} from "../utils/ToastPromiseHandling";
 const PnrProvider = ({ children }) => {
   let id = null;
   const [pnrDetails, setPnrDetails] = useState(null);
   const [pnr, setPnr] = useState(null);
   const { logOut } = useContext(Context.UserContext);
-  const axiosRequest = async (
-    url,
-    method,
-    data,
-    header,
-    callBack,
-    errorHandle
-  ) => {
+  const axiosRequest = async (url, method, data, header, callBack) => {
     let headers = {
       "Content-Type": "multipart/form-data",
     };
@@ -39,50 +36,36 @@ const PnrProvider = ({ children }) => {
       return response.data;
     } catch (error) {
       console.error(error);
-      if (error.response && error.response.status === 401) {
+      if (error.status && error.response.status === 401) {
         logOut();
+      } else if (error.status && error.response.status === 400) {
+        ExceptionHandling(id, error);
       }
-      if (errorHandle) {
-        errorHandle(error);
+      else {
+        ErrorToast(id, error.message);
       }
     }
-  };
-  const pnrValidationError = (error) => {
-    /**Handle PNR Validation Error */
-    Object.values(error.response.data).forEach((errors) => {
-      errors.forEach((error) => {
-        toast.update(id, {
-          render: error,
-          type: "error",
-          isLoading: false,
-          autoClose: 8000,
-          draggable: true,
-          closeButton: true,
-        });
-      });
-    });
   };
   /**Fetch PNR Details */
   const fetchPnrDetails = async (data) => {
     /**Fetch PNR Details */
-    id = toast.loading("Loading PNR Details...");
+    id = LoadingToast("Loading PNR Status...");
     setPnr(data);
     await axiosRequest(
-      constants.pnrFetchUrl,
+      pnrFetchUrl,
       "POST",
       {
         pnr: data,
       },
-      "Bearer " + utils.getLocalStorage("access"),
-      fetchPnrCallback,
-      pnrValidationError
+      getBearerToken(),
+      fetchPnrCallback
     );
   };
   const fetchPnrCallback = (response) => {
     /**Fetch PNR Details Callback */
     setPnrDetails(response);
     toast.update(id, {
-      render: "PNR Details Loaded",
+      render: "PNR Details Loaded...",
       type: "success",
       isLoading: false,
       autoClose: 8000,
@@ -95,21 +78,20 @@ const PnrProvider = ({ children }) => {
     /**Update PNR Details */
     id = toast.loading("Updating PNR Details...");
     await axiosRequest(
-      constants.pnrFetchUrl,
+      pnrFetchUrl,
       "PATCH",
       {
         pnr: pnr,
       },
-      "Bearer " + utils.getLocalStorage("access"),
-      updatePnrCallback,
-      pnrValidationError
+      getBearerToken(),
+      updatePnrCallback
     );
   };
   const updatePnrCallback = (response) => {
     /**Fetch PNR Details Callback */
     setPnrDetails(response);
     toast.update(id, {
-      render: "PNR Details Updated",
+      render: "PNR Details Updated...",
       type: "success",
       isLoading: false,
       autoClose: 8000,

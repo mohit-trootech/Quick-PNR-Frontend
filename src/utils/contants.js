@@ -1,7 +1,7 @@
 /**Constants */
 
 /**Daisy UI Themes */
-const themes = [
+export const themes = [
   "light",
   "dark",
   "cupcake",
@@ -35,13 +35,5 @@ const themes = [
   "nord",
   "sunset",
 ];
-const accountsUrl = "http://127.0.0.1:8000/accounts/";
-const pnrFetchUrl = "http://127.0.0.1:8000/pnr/fetch/";
-
-const constants = {
-  themes,
-  accountsUrl,
-  pnrFetchUrl,
-};
-
-export default constants;
+export const accountsUrl = "http://127.0.0.1:8000/accounts/";
+export const pnrFetchUrl = "http://127.0.0.1:8000/pnr/fetch/";

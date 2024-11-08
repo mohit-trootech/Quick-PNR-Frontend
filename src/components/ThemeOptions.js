@@ -1,11 +1,11 @@
 /**NavBar Theme Options */
-import constants from "../utils/contants";
+import { themes } from "../utils/contants";
 
 function Options() {
   /**Daisy UI Themes */
   return (
     <>
-      {constants.themes.map((themeOption) => (
+      {themes.map((themeOption) => (
         <option key={themeOption} value={themeOption}>
           {themeOption}
         </option>

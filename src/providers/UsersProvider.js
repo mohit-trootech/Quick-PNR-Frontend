@@ -1,27 +1,31 @@
 // UsersProvider.js
 // import React, { useState } from "react";
 import Context from "../context/Contexts";
-import constants from "../utils/contants";
+import { accountsUrl } from "../utils/contants";
 import axios from "axios";
 import { toast } from "react-toastify";
-import utils from "../utils/utils";
+import {
+  getBearerToken,
+  updateLocalStorage,
+  removeLocalStorage,
+} from "../utils/utils";
 import { useState } from "react";
+import {
+  ExceptionHandling,
+  LoadingToast,
+  ErrorToast,
+} from "../utils/ToastPromiseHandling";
+
 const UsersProvider = ({ children }) => {
   /**Toggle Password Visibility State */
+  let id = null;
   const [toggle, setToggle] = useState(false);
   const [user, setUser] = useState({});
   const toggleState = () => {
     setToggle(!toggle);
   };
 
-  const axiosRequest = async (
-    url,
-    method,
-    data,
-    header,
-    callBack,
-    errorHandle
-  ) => {
+  const axiosRequest = async (url, method, data, header, callBack) => {
     let headers = {
       "Content-Type": "multipart/form-data",
     };
@@ -42,22 +46,20 @@ const UsersProvider = ({ children }) => {
       return response.data;
     } catch (error) {
       console.error(error);
-      toast.error(error.response.data);
-      if (error.response && error.response.status === 401) {
+      if (error.status && error.response.status === 401) {
         logOut();
+      } else if (error.status && error.response.status === 400) {
+        ExceptionHandling(id, error);
       } else {
-        toast.error(error.response.data);
-      }
-
-      if (errorHandle) {
-        errorHandle();
+        ErrorToast(id, error.message);
       }
     }
   };
 
   const registerUser = async (data) => {
+    id = LoadingToast("Registering User...");
     await axiosRequest(
-      constants.accountsUrl + "register/",
+      accountsUrl + "register/",
       "POST",
       data,
       null,
@@ -65,13 +67,8 @@ const UsersProvider = ({ children }) => {
     );
   };
   const loginUser = async (data) => {
-    await axiosRequest(
-      constants.accountsUrl + "login/",
-      "POST",
-      data,
-      null,
-      userLogin
-    );
+    id = LoadingToast("Logging In...");
+    await axiosRequest(accountsUrl + "login/", "POST", data, null, userLogin);
   };
   const userRegister = (response) => {
     toast.success("User Registered Successfully", {
@@ -81,8 +78,8 @@ const UsersProvider = ({ children }) => {
     });
   };
   const userLogin = (response) => {
-    utils.updateLocalStorage("access", response.access);
-    utils.updateLocalStorage("refresh", response.refresh);
+    updateLocalStorage("access", response.access);
+    updateLocalStorage("refresh", response.refresh);
     toast.success("Login Successfully", {
       onClose: () => {
         window.location.href = "/"; //Toast on close redirects to home page
@@ -90,28 +87,29 @@ const UsersProvider = ({ children }) => {
     });
   };
   const logOut = () => {
-    utils.removeLocalStorage("access");
-    utils.removeLocalStorage("refresh");
+    id = LoadingToast("Logging Out...");
+    removeLocalStorage("access");
+    removeLocalStorage("refresh");
     window.location.href = "/login/";
     toast.update("Logged Out Session Expired Login Again to Continue");
   };
 
   const fetchUserProfile = async () => {
     let response = await axiosRequest(
-      constants.accountsUrl + "profile/",
+      accountsUrl + "profile/",
       "GET",
       null,
-      "Bearer " + utils.getLocalStorage("access")
+      getBearerToken()
     );
     setUser(response);
   };
 
   const updateUserProfile = async (data) => {
     let response = await axiosRequest(
-      constants.accountsUrl + "profile/",
+      accountsUrl + "profile/",
       "PATCH",
       data,
-      "Bearer " + utils.getLocalStorage("access")
+      getBearerToken()
     );
     setUser(response);
     toast.success("Profile Updated Successfully");
@@ -119,28 +117,28 @@ const UsersProvider = ({ children }) => {
 
   const updateUserEmail = async (data) => {
     await axiosRequest(
-      constants.accountsUrl + "update-email/",
+      accountsUrl + "update-email/",
       "PATCH",
       data,
-      "Bearer " + utils.getLocalStorage("access")
+      getBearerToken()
     );
     toast.success("Email Updated Successfully");
   };
   const verifyUserEmail = async (data) => {
     await axiosRequest(
-      constants.accountsUrl + "verify-email/",
+      accountsUrl + "verify-email/",
       "POST",
       data,
-      "Bearer " + utils.getLocalStorage("access")
+      getBearerToken()
     );
     toast.success("Email Verified Successfully");
   };
   const generateOtp = async () => {
     await axiosRequest(
-      constants.accountsUrl + "verify-email/",
+      accountsUrl + "verify-email/",
       "GET",
       null,
-      "Bearer " + utils.getLocalStorage("access")
+      getBearerToken()
     );
     toast.success("OTP Generated Successfully");
   };
