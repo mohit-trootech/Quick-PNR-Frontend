@@ -4,7 +4,7 @@
 import login from "../../static/img/login.gif";
 import { useContext } from "react";
 import Context from "../../context/Contexts";
-
+import { useGoogleLogin } from "@react-oauth/google";
 function Login() {
   /**User Login Page */
   const { loginUser, toggleState, toggle } = useContext(Context.UserContext);
@@ -13,6 +13,10 @@ function Login() {
     const data = new FormData(event.target);
     loginUser(data);
   };
+  const loginHandler = useGoogleLogin({
+    onSuccess: (codeResponse) => console.log(codeResponse),
+    onError: (error) => console.log("Login Failed:", error),
+  });
   return (
     <>
       <div className="hero min-h-screen bg-base-200 pt-5">
@@ -54,16 +58,19 @@ function Login() {
                   <a
                     role="button"
                     href="/register/"
-                    className="btn btn-outline btn-primary btn-block max-w-[200px]"
+                    className="btn btn-outline btn-primary"
                   >
                     Sign Up
                   </a>
                   <button
                     type="submit"
                     role="button"
-                    className="btn btn-primary btn-block max-w-[200px]"
+                    className="btn btn-primary"
                   >
                     Sign In
+                  </button>
+                  <button className="btn btn-primary" onClick={loginHandler}>
+                    Login With Google
                   </button>
                 </div>
               </div>

@@ -11,6 +11,7 @@ import Register from "./apps/users/Register";
 import Login from "./apps/users/Login";
 import Profile from "./apps/users/Profile";
 import { ToastContainer } from "react-toastify";
+
 function App() {
   return (
     <ThemeProvider>
