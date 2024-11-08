@@ -9,6 +9,7 @@ import {
   ExceptionHandling,
   LoadingToast,
   ErrorToast,
+  SuccessToast,
 } from "../utils/ToastPromiseHandling";
 const PnrProvider = ({ children }) => {
   let id = null;
@@ -40,8 +41,7 @@ const PnrProvider = ({ children }) => {
         logOut();
       } else if (error.status && error.response.status === 400) {
         ExceptionHandling(id, error);
-      }
-      else {
+      } else {
         ErrorToast(id, error.message);
       }
     }
@@ -64,14 +64,7 @@ const PnrProvider = ({ children }) => {
   const fetchPnrCallback = (response) => {
     /**Fetch PNR Details Callback */
     setPnrDetails(response);
-    toast.update(id, {
-      render: "PNR Details Loaded...",
-      type: "success",
-      isLoading: false,
-      autoClose: 8000,
-      draggable: true,
-      closeButton: true,
-    });
+    SuccessToast(id, "PNR Details Loaded...");
   };
   /**Update PNR Details */
   const handlePnrUpdate = async () => {
@@ -90,16 +83,29 @@ const PnrProvider = ({ children }) => {
   const updatePnrCallback = (response) => {
     /**Fetch PNR Details Callback */
     setPnrDetails(response);
-    toast.update(id, {
-      render: "PNR Details Updated...",
-      type: "success",
-      isLoading: false,
-      autoClose: 8000,
-      draggable: true,
-      closeButton: true,
-    });
+    SuccessToast(id, "PNR Details Updated...");
   };
-  const data = { pnrDetails, fetchPnrDetails, handlePnrUpdate };
+  /**Get Request to Mail PNR Details */
+  const handlePnrDetailsMail = async () => {
+    /**Fetch PNR Details Callback */
+    id = LoadingToast("Mailing PNR Status...");
+    await axiosRequest(
+      pnrFetchUrl + `?pnr=${pnr}&mail=true`,
+      "GET",
+      null,
+      getBearerToken(),
+      pnrDetailsMailCallback
+    );
+  };
+  const pnrDetailsMailCallback = (response) => {
+    SuccessToast(id, response.message);
+  };
+  const data = {
+    pnrDetails,
+    fetchPnrDetails,
+    handlePnrUpdate,
+    handlePnrDetailsMail,
+  };
   return (
     <Context.PnrContext.Provider value={data}>
       {children}

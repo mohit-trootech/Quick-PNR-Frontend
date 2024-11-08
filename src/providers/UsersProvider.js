@@ -3,7 +3,6 @@
 import Context from "../context/Contexts";
 import { accountsUrl } from "../utils/contants";
 import axios from "axios";
-import { toast } from "react-toastify";
 import {
   getBearerToken,
   updateLocalStorage,
@@ -14,6 +13,7 @@ import {
   ExceptionHandling,
   LoadingToast,
   ErrorToast,
+  SuccessToast,
 } from "../utils/ToastPromiseHandling";
 
 const UsersProvider = ({ children }) => {
@@ -57,7 +57,11 @@ const UsersProvider = ({ children }) => {
   };
 
   const registerUser = async (data) => {
-    id = LoadingToast("Registering User...");
+    id = LoadingToast("Registering User...", {
+      onClose: () => {
+        window.location.href = "/login/";
+      },
+    });
     await axiosRequest(
       accountsUrl + "register/",
       "POST",
@@ -67,31 +71,27 @@ const UsersProvider = ({ children }) => {
     );
   };
   const loginUser = async (data) => {
-    id = LoadingToast("Logging In...");
-    await axiosRequest(accountsUrl + "login/", "POST", data, null, userLogin);
-  };
-  const userRegister = (response) => {
-    toast.success("User Registered Successfully", {
-      onClose: () => {
-        window.location.href = "/login/"; //Toast on close redirects to login page
-      },
-    });
-  };
-  const userLogin = (response) => {
-    updateLocalStorage("access", response.access);
-    updateLocalStorage("refresh", response.refresh);
-    toast.success("Login Successfully", {
+    id = LoadingToast("Logging In...", {
       onClose: () => {
         window.location.href = "/"; //Toast on close redirects to home page
       },
     });
+    await axiosRequest(accountsUrl + "login/", "POST", data, null, userLogin);
+  };
+  const userRegister = (response) => {
+    SuccessToast(id, response.message);
+  };
+  const userLogin = (response) => {
+    updateLocalStorage("access", response.access);
+    updateLocalStorage("refresh", response.refresh);
+    SuccessToast(id, response.message);
   };
   const logOut = () => {
     id = LoadingToast("Logging Out...");
     removeLocalStorage("access");
     removeLocalStorage("refresh");
     window.location.href = "/login/";
-    toast.update("Logged Out Session Expired Login Again to Continue");
+    SuccessToast(id, "Logged Out Successfully");
   };
 
   const fetchUserProfile = async () => {
@@ -99,12 +99,14 @@ const UsersProvider = ({ children }) => {
       accountsUrl + "profile/",
       "GET",
       null,
-      getBearerToken()
+      getBearerToken(),
+      setUser
     );
     setUser(response);
   };
 
   const updateUserProfile = async (data) => {
+    id = LoadingToast("Updating Profile...");
     let response = await axiosRequest(
       accountsUrl + "profile/",
       "PATCH",
@@ -112,35 +114,38 @@ const UsersProvider = ({ children }) => {
       getBearerToken()
     );
     setUser(response);
-    toast.success("Profile Updated Successfully");
+    SuccessToast(id, response.message);
   };
 
   const updateUserEmail = async (data) => {
+    id = LoadingToast("Updating Email...");
     await axiosRequest(
       accountsUrl + "update-email/",
       "PATCH",
       data,
       getBearerToken()
     );
-    toast.success("Email Updated Successfully");
+    SuccessToast(id, "Email Updated Successfully");
   };
   const verifyUserEmail = async (data) => {
+    id = LoadingToast("Verifying Email...");
     await axiosRequest(
       accountsUrl + "verify-email/",
       "POST",
       data,
       getBearerToken()
     );
-    toast.success("Email Verified Successfully");
+    SuccessToast(id, "Email Verified Successfully");
   };
   const generateOtp = async () => {
+    id = LoadingToast("Generating OTP...");
     await axiosRequest(
       accountsUrl + "verify-email/",
       "GET",
       null,
       getBearerToken()
     );
-    toast.success("OTP Generated Successfully");
+    SuccessToast(id, "OTP Generated Successfully");
   };
 
   const data = {

@@ -3,7 +3,9 @@ import Context from "../../context/Contexts";
 import { useContext } from "react";
 function PnrDetail() {
   /**PNR Detail Daisy UI Component */
-  const { pnrDetails, handlePnrUpdate } = useContext(Context.PnrContext);
+  const { pnrDetails, handlePnrUpdate, handlePnrDetailsMail } = useContext(
+    Context.PnrContext
+  );
   return (
     <>
       {pnrDetails && (
@@ -22,9 +24,14 @@ function PnrDetail() {
                 })}
               </div>
             </button>
-            <button className="btn" onClick={handlePnrUpdate}>
-              Update Details
-            </button>
+            <div className="flex justify-end gap-5">
+              <button className="btn" onClick={handlePnrUpdate}>
+                Update Details
+              </button>
+              <button className="btn" onClick={handlePnrDetailsMail}>
+                Mail Details
+              </button>
+            </div>
           </div>
           <div className="w-full rounded-lg shadow-md overflow-x-auto">
             <table className="table table-zebra">
