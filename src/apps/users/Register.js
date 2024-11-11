@@ -3,18 +3,47 @@
 import signup from "../../static/img/signup.gif";
 import { useContext } from "react";
 import Context from "../../context/Contexts";
+import { useGoogleLogin } from "@react-oauth/google";
+import { get_user_google_credentials } from "../../utils/utils";
 
 function Register() {
   /**User Registration Page */
-  const { registerUser, toggle, toggleState } = useContext(Context.UserContext);
+  const { registerUser, toggle, toggleState, googleRegister } = useContext(
+    Context.UserContext
+  );
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
     registerUser(data);
   };
-
+  const loginHandler = useGoogleLogin({
+    onSuccess: async (codeResponse) => {
+      let response = await get_user_google_credentials(
+        codeResponse.access_token
+      );
+      console.log({
+        token: codeResponse.access_token,
+        google_id: response.id,
+        email: response.email,
+        first_name: response.given_name,
+      });
+      googleRegister({
+        token: codeResponse.access_token,
+        google_id: response.id,
+        username: response.email,
+        email: response.email,
+        first_name: response.given_name,
+      });
+    },
+    onError: (error) => console.error("Login Failed:", error),
+  });
   return (
     <>
+      <div
+        id="g_id_onload"
+        data-client_id="289813396319-2bpdlvdug1pu2ldabbga0n76aieg86nt.apps.googleusercontent.com"
+        data-login_uri="{% url 'google_login_by_token' %}"
+      ></div>
       <div className="hero min-h-screen bg-base-200 py-5">
         <div className="drop-shadow-xl w-full rounded-md flex justify-between items-stretch">
           <div className="sm:w-[60%] lg:w-[50%] bg-cover bg-center items-center justify-center hidden md:flex ">
@@ -24,6 +53,17 @@ function Register() {
             <h1 className="text-center text-2xl sm:text-3xl font-semibold">
               Create Account
             </h1>
+            <button
+              className="mt-3 w-full btn btn-primary"
+              onClick={loginHandler}
+            >
+              Register with Google
+            </button>
+            <p className="text-sm text-center mt-2 italic">
+              Note: use email id as username, for next login step, you can
+              change it later. forgot password & create a new password on first
+              login when registering with Google.
+            </p>
             <form
               method="POST"
               onSubmit={handleSubmit}
@@ -71,18 +111,18 @@ function Register() {
                     <span className="label-text">Show Password</span>
                   </label>
                 </div>
-                <div className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center items-center">
+                <div className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center items-center w-60 mx-auto">
                   <button
                     role="button"
                     type="submit"
-                    className="btn btn-active btn-primary btn-block max-w-[200px]"
+                    className="btn btn-active btn-primary btn-block"
                   >
                     Sign Up
                   </button>
                   <a
                     href="/login"
                     role="button"
-                    className="btn btn-outline btn-primary btn-block max-w-[200px]"
+                    className="btn btn-outline btn-primary btn-block"
                   >
                     Sign In
                   </a>

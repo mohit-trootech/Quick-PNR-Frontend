@@ -5,16 +5,29 @@ import login from "../../static/img/login.gif";
 import { useContext } from "react";
 import Context from "../../context/Contexts";
 import { useGoogleLogin } from "@react-oauth/google";
+import { get_user_google_credentials } from "../../utils/utils";
 function Login() {
   /**User Login Page */
-  const { loginUser, toggleState, toggle } = useContext(Context.UserContext);
+  const { loginUser, toggleState, toggle, googleLogin } = useContext(
+    Context.UserContext
+  );
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
     loginUser(data);
   };
   const loginHandler = useGoogleLogin({
-    onSuccess: (codeResponse) => console.log(codeResponse),
+    onSuccess: async (codeResponse) => {
+      let response = await get_user_google_credentials(
+        codeResponse.access_token
+      );
+      console.log(response);
+      googleLogin({
+        google_id: response.id,
+        username: response.email,
+        email: response.email,
+      });
+    },
     onError: (error) => console.error("Login Failed:", error),
   });
   return (
@@ -25,6 +38,12 @@ function Login() {
             <h1 className="text-center text-2xl sm:text-3xl font-semibold">
               Login into Your Account
             </h1>
+            <button
+              className="mt-3 w-full btn btn-primary"
+              onClick={loginHandler}
+            >
+              Login with Google
+            </button>
             <form
               method="post"
               onSubmit={handleSubmit}
@@ -67,23 +86,20 @@ function Login() {
                     <span className="label-text">Show Password</span>
                   </label>
                 </div>
-                <div className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center items-center">
+                <div className="flex w-full flex-col md:flex-row gap-2 md:gap-4 justify-center items-center w-60 mx-auto">
                   <a
                     role="button"
                     href="/register/"
-                    className="btn btn-outline btn-primary"
+                    className="btn btn-block btn-outline btn-primary"
                   >
                     Sign Up
                   </a>
                   <button
                     type="submit"
                     role="button"
-                    className="btn btn-primary"
+                    className="btn btn-block btn-primary"
                   >
                     Sign In
-                  </button>
-                  <button className="btn btn-primary" onClick={loginHandler}>
-                    Login With Google
                   </button>
                 </div>
               </div>

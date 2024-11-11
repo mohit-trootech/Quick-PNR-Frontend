@@ -69,7 +69,28 @@ const UsersProvider = ({ children }) => {
       }
     }
   };
-
+  const googleRegister = async (data) => {
+    id = LoadingToast("Registering User...");
+    await axiosRequest(
+      accountsUrl + "auth-google-signup/",
+      "POST",
+      data,
+      null,
+      userRegister,
+      id
+    );
+  };
+  const googleLogin = async (data) => {
+    id = LoadingToast("Logging In...");
+    await axiosRequest(
+      accountsUrl + "auth-google-login/",
+      "POST",
+      data,
+      null,
+      userLogin,
+      id
+    );
+  };
   const registerUser = async (data) => {
     id = LoadingToast("Registering User...", {
       onClose: () => {
@@ -220,6 +241,8 @@ const UsersProvider = ({ children }) => {
     updatePassword,
     forgotPasswordOtpSent,
     forgotPasswordOtpValidate,
+    googleRegister,
+    googleLogin,
   };
 
   return (

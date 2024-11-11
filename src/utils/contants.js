@@ -37,3 +37,4 @@ export const themes = [
 ];
 export const accountsUrl = "http://127.0.0.1:8000/accounts/";
 export const pnrFetchUrl = "http://127.0.0.1:8000/pnr/fetch/";
+export const userDetailsGoogle = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=`;
