@@ -11,6 +11,8 @@ import Register from "./apps/users/Register";
 import Login from "./apps/users/Login";
 import Profile from "./apps/users/Profile";
 import { ToastContainer } from "react-toastify";
+import ChangePassword from "./apps/users/ChangePassword";
+import ForgotPassword from "./apps/users/ForgotPassword";
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
               <Route path="/register/" element={<Register />} />
               <Route path="/login/" element={<Login />} />
               <Route path="/profile/" element={<Profile />} />
+              <Route path="/change-password/" element={<ChangePassword />} />
+              <Route path="/forgot-password/" element={<ForgotPassword />} />
               <Route path="*" element={<NoPage />} />
             </Routes>
             <Footer />

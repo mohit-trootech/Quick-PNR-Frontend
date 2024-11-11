@@ -15,7 +15,7 @@ function Login() {
   };
   const loginHandler = useGoogleLogin({
     onSuccess: (codeResponse) => console.log(codeResponse),
-    onError: (error) => console.log("Login Failed:", error),
+    onError: (error) => console.error("Login Failed:", error),
   });
   return (
     <>
@@ -38,12 +38,25 @@ function Login() {
                   name="username"
                   className="input input-bordered input-primary w-full"
                 />
-                <input
-                  type={toggle ? "text" : "password"}
-                  placeholder="Choose Your Password"
-                  name="password"
-                  className="input input-bordered input-primary w-full"
-                />
+                <label className="form-control w-full">
+                  <input
+                    type={toggle ? "text" : "password"}
+                    placeholder="Choose Your Password"
+                    name="password"
+                    className="input input-bordered input-primary w-full"
+                  />
+                  <div className="label">
+                    <span className="label-text-alt">
+                      Forgot passoword?
+                      <a
+                        href="/forgot-password/"
+                        className="ml-1 text-primary underline"
+                      >
+                        reset here.
+                      </a>
+                    </span>
+                  </div>
+                </label>
                 <div className="form-control">
                   <label className="label cursor-pointer justify-start gap-x-4">
                     <input

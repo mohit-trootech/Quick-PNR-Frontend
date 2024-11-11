@@ -61,7 +61,6 @@ function UpdateProfile({ user }) {
           <h3 className="font-bold text-lg">Update Profile!</h3>
           <div className="py-4">
             <form
-              method="post"
               onSubmit={handleSubmit}
               role="form"
               className="w-full mt-5 sm:mt-8"
@@ -102,16 +101,19 @@ function UpdateProfile({ user }) {
                   placeholder="Enter Address"
                   name="address"
                   id="address"
+                  defaultValue={user.address}
+                  rows={4}
                 >
                   {user.address}
                 </textarea>
                 <div className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center items-center">
-                  <button
+                  <a
                     role="button"
+                    href="/change-password/"
                     className="btn btn-outline btn-primary btn-block max-w-[200px]"
                   >
-                    Update Address
-                  </button>
+                    Change Password
+                  </a>
                   <button
                     type="submit"
                     role="button"

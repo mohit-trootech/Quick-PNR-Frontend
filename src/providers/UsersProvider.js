@@ -3,18 +3,25 @@
 import Context from "../context/Contexts";
 import { accountsUrl } from "../utils/contants";
 import axios from "axios";
-import {
-  getBearerToken,
-  updateLocalStorage,
-  removeLocalStorage,
-} from "../utils/utils";
+import { getBearerToken, removeLocalStorage } from "../utils/utils";
 import { useState } from "react";
 import {
   ExceptionHandling,
   LoadingToast,
   ErrorToast,
-  SuccessToast,
 } from "../utils/ToastPromiseHandling";
+import {
+  userRegister,
+  userLogin,
+  FetchUserProfile,
+  UpdateUserEmail,
+  VerifyEmail,
+  OtpGenerated,
+  UpdatePasswordSuccess,
+  userLogout,
+  forgotPasswordOtpSentSuccess,
+  forgotPasswordOtpValidateSuccess,
+} from "../utils/SuccessToasts";
 
 const UsersProvider = ({ children }) => {
   /**Toggle Password Visibility State */
@@ -25,7 +32,14 @@ const UsersProvider = ({ children }) => {
     setToggle(!toggle);
   };
 
-  const axiosRequest = async (url, method, data, header, callBack) => {
+  const axiosRequest = async (
+    url,
+    method,
+    data,
+    header,
+    callBack,
+    toast_id
+  ) => {
     let headers = {
       "Content-Type": "multipart/form-data",
     };
@@ -41,7 +55,7 @@ const UsersProvider = ({ children }) => {
         headers: headers,
       });
       if (callBack) {
-        callBack(response.data);
+        callBack(toast_id, response.data);
       }
       return response.data;
     } catch (error) {
@@ -67,7 +81,8 @@ const UsersProvider = ({ children }) => {
       "POST",
       data,
       null,
-      userRegister
+      userRegister,
+      id
     );
   };
   const loginUser = async (data) => {
@@ -76,22 +91,22 @@ const UsersProvider = ({ children }) => {
         window.location.href = "/"; //Toast on close redirects to home page
       },
     });
-    await axiosRequest(accountsUrl + "login/", "POST", data, null, userLogin);
+    await axiosRequest(
+      accountsUrl + "login/",
+      "POST",
+      data,
+      null,
+      userLogin,
+      id
+    );
   };
-  const userRegister = (response) => {
-    SuccessToast(id, response.message);
-  };
-  const userLogin = (response) => {
-    updateLocalStorage("access", response.access);
-    updateLocalStorage("refresh", response.refresh);
-    SuccessToast(id, response.message);
-  };
+
   const logOut = () => {
     id = LoadingToast("Logging Out...");
     removeLocalStorage("access");
     removeLocalStorage("refresh");
     window.location.href = "/login/";
-    SuccessToast(id, "Logged Out Successfully");
+    userLogout(id, "Logged Out Successfully");
   };
 
   const fetchUserProfile = async () => {
@@ -111,10 +126,11 @@ const UsersProvider = ({ children }) => {
       accountsUrl + "profile/",
       "PATCH",
       data,
-      getBearerToken()
+      getBearerToken(),
+      FetchUserProfile,
+      id
     );
     setUser(response);
-    SuccessToast(id, response.message);
   };
 
   const updateUserEmail = async (data) => {
@@ -123,19 +139,21 @@ const UsersProvider = ({ children }) => {
       accountsUrl + "update-email/",
       "PATCH",
       data,
-      getBearerToken()
+      getBearerToken(),
+      UpdateUserEmail,
+      id
     );
-    SuccessToast(id, "Email Updated Successfully");
   };
   const verifyUserEmail = async (data) => {
     id = LoadingToast("Verifying Email...");
     await axiosRequest(
       accountsUrl + "verify-email/",
-      "POST",
+      "PATCH",
       data,
-      getBearerToken()
+      getBearerToken(),
+      VerifyEmail,
+      id
     );
-    SuccessToast(id, "Email Verified Successfully");
   };
   const generateOtp = async () => {
     id = LoadingToast("Generating OTP...");
@@ -143,9 +161,47 @@ const UsersProvider = ({ children }) => {
       accountsUrl + "verify-email/",
       "GET",
       null,
-      getBearerToken()
+      getBearerToken(),
+      OtpGenerated,
+      id
     );
-    SuccessToast(id, "OTP Generated Successfully");
+  };
+  const updatePassword = async (data) => {
+    id = LoadingToast("Updating Password...");
+    await axiosRequest(
+      accountsUrl + "change-password/",
+      "PATCH",
+      data,
+      getBearerToken(),
+      UpdatePasswordSuccess,
+      id
+    );
+  };
+  const forgotPasswordOtpSent = async (data) => {
+    id = LoadingToast("Sending Password Reset OTP...");
+    await axiosRequest(
+      accountsUrl + "forgot-password/",
+      "POST",
+      data,
+      null,
+      forgotPasswordOtpSentSuccess,
+      id
+    );
+  };
+  const forgotPasswordOtpValidate = async (data) => {
+    id = LoadingToast("Resetting Passwords...", {
+      onClose: () => {
+        window.location.href = "/login/";
+      },
+    });
+    await axiosRequest(
+      accountsUrl + "forgot-password/",
+      "PATCH",
+      data,
+      null,
+      forgotPasswordOtpValidateSuccess,
+      id
+    );
   };
 
   const data = {
@@ -161,6 +217,9 @@ const UsersProvider = ({ children }) => {
     updateUserEmail,
     verifyUserEmail,
     generateOtp,
+    updatePassword,
+    forgotPasswordOtpSent,
+    forgotPasswordOtpValidate,
   };
 
   return (
