@@ -21,12 +21,6 @@ function Register() {
       let response = await get_user_google_credentials(
         codeResponse.access_token
       );
-      console.log({
-        token: codeResponse.access_token,
-        google_id: response.id,
-        email: response.email,
-        first_name: response.given_name,
-      });
       googleRegister({
         token: codeResponse.access_token,
         google_id: response.id,

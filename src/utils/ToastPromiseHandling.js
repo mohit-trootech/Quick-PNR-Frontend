@@ -6,7 +6,7 @@ const UpdateToast = (toast_id, message, type) => {
     render: message,
     type: type,
     isLoading: false,
-    autoClose: 8000,
+    autoClose: 7000,
     draggable: true,
     closeButton: true,
   });
