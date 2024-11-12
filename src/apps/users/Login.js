@@ -6,8 +6,10 @@ import { useContext } from "react";
 import Context from "../../context/Contexts";
 import { useGoogleLogin } from "@react-oauth/google";
 import { get_user_google_credentials } from "../../utils/utils";
+
 function Login() {
   /**User Login Page */
+
   const { loginUser, toggleState, toggle, googleLogin } = useContext(
     Context.UserContext
   );
@@ -21,7 +23,6 @@ function Login() {
       let response = await get_user_google_credentials(
         codeResponse.access_token
       );
-      console.log(response);
       googleLogin({
         google_id: response.id,
         username: response.email,
@@ -86,18 +87,18 @@ function Login() {
                     <span className="label-text">Show Password</span>
                   </label>
                 </div>
-                <div className="flex w-full flex-col md:flex-row gap-2 md:gap-4 justify-center items-center w-60 mx-auto">
+                <div className="flex w-full flex-col md:flex-row gap-2 md:gap-4 justify-center items-center w-64 mx-auto">
                   <a
                     role="button"
                     href="/register/"
-                    className="btn btn-block btn-outline btn-primary"
+                    className="btn btn-outline btn-primary"
                   >
                     Sign Up
                   </a>
                   <button
                     type="submit"
                     role="button"
-                    className="btn btn-block btn-primary"
+                    className="btn btn-primary"
                   >
                     Sign In
                   </button>

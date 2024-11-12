@@ -41,6 +41,10 @@ const PnrProvider = ({ children }) => {
         logOut();
       } else if (error.status && error.response.status === 400) {
         ExceptionHandling(id, error);
+      } else if (error.status && error.response.status === 404) {
+        ExceptionHandling(id, error);
+      } else if (error.status && error.response.status === 403) {
+        ExceptionHandling(id, error);
       } else {
         ErrorToast(id, error.message);
       }

@@ -11,12 +11,12 @@ const UpdateToast = (toast_id, message, type) => {
     closeButton: true,
   });
 };
-export const ExceptionHandling = (toast_id, error) => {
-  Object.values(error.response.data).forEach((errors) => {
-    if (typeof errors == "string") {
-      UpdateToast(toast_id, errors, "error");
+export const ExceptionHandling = (toast_id, errors) => {
+  Object.values(errors.response.data).forEach((error) => {
+    if (typeof error == "string") {
+      UpdateToast(toast_id, error, "error");
     } else {
-      errors.forEach((err) => {
+      error.forEach((err) => {
         UpdateToast(toast_id, err, "error");
       });
     }
@@ -31,6 +31,11 @@ export const ErrorToast = (toast_id, message) => {
   UpdateToast(toast_id, message, "error");
 };
 
-export const SuccessToast = (toast_id, message) => {
+export const SuccessToast = (toast_id, message, successUrl) => {
   UpdateToast(toast_id, message, "success");
+
+  successUrl &&
+    setTimeout(() => {
+      window.location.href = successUrl;
+    }, 8000);
 };

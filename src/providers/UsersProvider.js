@@ -38,7 +38,8 @@ const UsersProvider = ({ children }) => {
     data,
     header,
     callBack,
-    toast_id
+    toast_id,
+    successUrl
   ) => {
     let headers = {
       "Content-Type": "multipart/form-data",
@@ -55,7 +56,7 @@ const UsersProvider = ({ children }) => {
         headers: headers,
       });
       if (callBack) {
-        callBack(toast_id, response.data);
+        callBack(toast_id, response.data, successUrl);
       }
       return response.data;
     } catch (error) {
@@ -63,6 +64,10 @@ const UsersProvider = ({ children }) => {
       if (error.status && error.response.status === 401) {
         logOut();
       } else if (error.status && error.response.status === 400) {
+        ExceptionHandling(id, error);
+      } else if (error.status && error.response.status === 404) {
+        ExceptionHandling(id, error);
+      } else if (error.status && error.response.status === 403) {
         ExceptionHandling(id, error);
       } else {
         ErrorToast(id, error.message);
@@ -77,7 +82,8 @@ const UsersProvider = ({ children }) => {
       data,
       null,
       userRegister,
-      id
+      id,
+      "/login/"
     );
   };
   const googleLogin = async (data) => {
@@ -88,45 +94,43 @@ const UsersProvider = ({ children }) => {
       data,
       null,
       userLogin,
-      id
+      id,
+      "/"
     );
   };
   const registerUser = async (data) => {
-    id = LoadingToast("Registering User...", {
-      onClose: () => {
-        window.location.href = "/login/";
-      },
-    });
+    id = LoadingToast("Registering User...");
     await axiosRequest(
       accountsUrl + "register/",
       "POST",
       data,
       null,
       userRegister,
-      id
+      id,
+      "/login/"
     );
   };
   const loginUser = async (data) => {
-    id = LoadingToast("Logging In...", {
-      onClose: () => {
-        window.location.href = "/"; //Toast on close redirects to home page
-      },
-    });
+    id = LoadingToast("Logging In...");
     await axiosRequest(
       accountsUrl + "login/",
       "POST",
       data,
       null,
       userLogin,
-      id
+      id,
+      "/"
     );
   };
 
   const logOut = () => {
-    id = LoadingToast("Logging Out...");
+    id = LoadingToast("Logging Out...", {
+      onClose: () => {
+        window.location.href = "/login/";
+      },
+    });
     removeLocalStorage("access");
     removeLocalStorage("refresh");
-    window.location.href = "/login/";
     userLogout(id, "Logged Out Successfully");
   };
 
@@ -210,18 +214,15 @@ const UsersProvider = ({ children }) => {
     );
   };
   const forgotPasswordOtpValidate = async (data) => {
-    id = LoadingToast("Resetting Passwords...", {
-      onClose: () => {
-        window.location.href = "/login/";
-      },
-    });
+    id = LoadingToast("Resetting Passwords...");
     await axiosRequest(
       accountsUrl + "forgot-password/",
       "PATCH",
       data,
       null,
       forgotPasswordOtpValidateSuccess,
-      id
+      id,
+      "/login/"
     );
   };
 
